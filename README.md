@@ -27,29 +27,29 @@
 
 ```
 
-You can use "sed", but you have to make the changes to a temporary file and use "cp" to overwrite the original, avoiding issues with symlinks and permissions.
+You can use `sed`, but you have to make the changes to a temporary file and use `cp` to overwrite the original, avoiding issues with symlinks and permissions.
 
 
-Alternatively, you can just automate the "vi" text editor to do it. 
+Alternatively, you can just automate the `vi` text editor to do it. 
 
 This retains symlinks and user/group and file permissions, whilst avoiding file locking and causing the file to be write protected during processing.
 
-vi +<Start line to remove>,<End line to remove>d +wq <file>
+`vi +<Start line to remove>,<End line to remove>d +wq <file>`
 
 For instance:
 
-vi +13,26d +wq my.log
+`vi +13,26d +wq my.log`
 
-Which would remove lines 13-26 (including 13 and 26) from the file "my.log".
+Which would remove lines 13-26 (including 13 and 26) from the file `my.log`.
 
 Unfortunately, this did not work properly with multiple files or wildcard patterns.
 
 For instance:
-vi +13,26d +wq my* - Would not find my.log and only the files "my*" without a filename extension ".xxx".
+`vi +13,26d +wq my*` - Would not find `my.log` and only the files `my*` without a filename extension `.xxx`.
 
 
-So a better way would be to use the "find" package to find the files first and execute the command for each one.
+So a better way would be to use the `find` package to find the files first and execute the command for each one.
 
-find -L my* ! -type d -execdir vi +13,26d +wq "{}" \;
+`find -L my* ! -type d -execdir vi +13,26d +wq "{}" \;`
 
-This method will allow for wildcard patterns and with the "-L" argument, will also follow symlinks.
+This method will allow for wildcard patterns and with the `-L` argument, will also follow symlinks.
